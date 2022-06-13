@@ -3,13 +3,11 @@ module Api
     class TodoListsController < ApplicationController
 
       def index
-        # byebug
         todo_lists = TodoList.order(created_at: :desc)
         render json: todo_lists
       end
 
       def create
-        byebug
         todo_list = TodoList.create(todo_list_params)
         render json: todo_list
       end

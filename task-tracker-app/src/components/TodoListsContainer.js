@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import axios from "axios";
 import update from "immutability-helper";
+import Task from './Task'
 
 class TodoListsContainer extends Component {
   constructor(props) {
@@ -10,7 +11,6 @@ class TodoListsContainer extends Component {
       title: '',
       description: '',
       done: false,
-      inputValue: ''
     };
   }
 
@@ -38,7 +38,6 @@ class TodoListsContainer extends Component {
       axios
         .post("/api/v1/todo_lists", {tdlist: {title: this.state.title, description: this.state.description, done: this.state.done }})
         .then((res) => {
-          debugger
           const tdlists = update(this.state.tdlists, {
             $splice: [[0, 0, res.data]],
           });
@@ -48,7 +47,6 @@ class TodoListsContainer extends Component {
             title: '',
             description: '',
             done: false,
-            inputValue: "",
           });
         })
         .catch((error) => console.log(error));
@@ -91,75 +89,44 @@ class TodoListsContainer extends Component {
     this.loadTdlists();
   }
 
-  handleChange = (e) => {
-    this.setState({inputValue: e.target.value});
-  };
-
   render() {
     return (
-      <div>
-
+      <>
         <div className="taskContainer">
-          <form className='add-form' onSubmit={this.onSubmit}>
-            <div className='form-control'>
+          <form onSubmit={this.onSubmit}>
+            <div>
               <label>Task</label>
               <input
                 type='text'
-
+                className="newTask"
                 placeholder='Add Task'
                 value={this.state.title}
                 onChange={(e) => this.setState({title: e.target.value})}
               />
             </div>
-            <div className='form-control'>
-              <label>Day & Time</label>
+            <div>
+              <label>Description</label>
               <input
                 type='text'
-
-                placeholder='Add Day & Time'
+                className="newTask"
+                placeholder='Add Description'
                 value={this.state.description}
                 onChange={(e) => this.setState({description: e.target.value})}
               />
             </div>
-
             <input type='submit' value='Save Task' className='btn btn-block' />
           </form>
-
-
-          {/*<input*/}
-          {/*  className="newTask"*/}
-          {/*  type="text"*/}
-          {/*  placeholder="Input a New Task and Press Enter"*/}
-          {/*  maxLength="75"*/}
-          {/*  onKeyPress={this.newTdlist}*/}
-          {/*  value={this.state.inputValue}*/}
-          {/*  onChange={this.handleChange}*/}
-          {/*/>*/}
         </div>
         <div className="wrapItems">
           <ul className="listItems">
-            {this.state.tdlists.map((tdlist) => {
+            {this.state.tdlists.map((tdlist, index) => {
               return (
-                <li className="item" tdlist={tdlist} key={tdlist.id}>
-                  <input
-                    className="itemCheckbox"
-                    type="checkbox"
-                    checked={tdlist.done}
-                    onChange={(e) => this.modifyTdlist(e, tdlist.id)}
-                  />
-                  <label className="itemDisplay">{tdlist.title}</label>
-                  <span
-                    className="removeItemButton"
-                    onClick={(e) => this.removeTdlist(tdlist.id)}
-                  >
-                    x
-                  </span>
-                </li>
+                <Task key={index} tdlist={tdlist} onChange={this.modifyTdlist} onClick={this.removeTdlist} />
               );
             })}
           </ul>
         </div>
-      </div>
+      </>
     );
   }
 }
