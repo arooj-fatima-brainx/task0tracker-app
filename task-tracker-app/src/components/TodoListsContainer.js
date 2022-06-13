@@ -25,6 +25,17 @@ class TodoListsContainer extends Component {
     this.newTdlist()
   }
 
+  editTdList = (e, id, title, description) => {
+    e.preventDefault()
+
+    if (!title) {
+      alert('Please add a task')
+      return
+    }
+
+    this.updateTdlist(id, title, description)
+  }
+
   loadTdlists() {
     axios
       .get("/api/v1/todo_lists")
@@ -34,28 +45,51 @@ class TodoListsContainer extends Component {
       .catch((error) => console.log(error));
   }
 
-  newTdlist () {
-      axios
-        .post("/api/v1/todo_lists", {tdlist: {title: this.state.title, description: this.state.description, done: this.state.done }})
-        .then((res) => {
-          const tdlists = update(this.state.tdlists, {
-            $splice: [[0, 0, res.data]],
-          });
+  newTdlist() {
+    axios
+      .post("/api/v1/todo_lists", {
+        tdlist: {
+          title: this.state.title,
+          description: this.state.description,
+          done: this.state.done
+        }
+      })
+      .then((res) => {
+        const tdlists = update(this.state.tdlists, {
+          $splice: [[0, 0, res.data]],
+        });
 
-          this.setState({
-            tdlists: tdlists,
-            title: '',
-            description: '',
-            done: false,
-          });
-        })
-        .catch((error) => console.log(error));
+        this.setState({
+          tdlists: tdlists,
+          title: '',
+          description: '',
+          done: false,
+        });
+      })
+      .catch((error) => console.log(error));
 
   };
 
   modifyTdlist = (e, id) => {
     axios
       .put(`/api/v1/todo_lists/${id}`, {tdlist: {done: e.target.checked}})
+      .then((res) => {
+        const tdlistIndex = this.state.tdlists.findIndex(
+          (x) => x.id === res.data.id
+        );
+        const tdlists = update(this.state.tdlists, {
+          [tdlistIndex]: {$set: res.data},
+        });
+        this.setState({
+          tdlists: tdlists,
+        });
+      })
+      .catch((error) => console.log(error));
+  };
+
+  updateTdlist = (id, title, description) => {
+    axios
+      .put(`/api/v1/todo_lists/${id}`, {tdlist: {title: title, description: description}})
       .then((res) => {
         const tdlistIndex = this.state.tdlists.findIndex(
           (x) => x.id === res.data.id
@@ -114,14 +148,15 @@ class TodoListsContainer extends Component {
                 onChange={(e) => this.setState({description: e.target.value})}
               />
             </div>
-            <input type='submit' value='Save Task' className='btn btn-block' />
+            <input type='submit' value='Save Task' className='btn btn-block'/>
           </form>
         </div>
         <div className="wrapItems">
           <ul className="listItems">
             {this.state.tdlists.map((tdlist, index) => {
               return (
-                <Task key={index} tdlist={tdlist} onChange={this.modifyTdlist} onClick={this.removeTdlist} />
+                <Task key={index} tdlist={tdlist} onChange={this.modifyTdlist} onClick={this.removeTdlist}
+                      onSubmit={this.editTdList}/>
               );
             })}
           </ul>

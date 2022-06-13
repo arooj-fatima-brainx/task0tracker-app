@@ -1,4 +1,12 @@
-const Task = ({ tdlist, onChange, onClick }) => {
+import UpdateModal from "./UpdateModal";
+import {Button} from "react-bootstrap";
+import React, {useState} from "react";
+
+const Task = ({tdlist, onChange, onClick, onSubmit}) => {
+  // const [isOpen, setIsOpen] = useState(false);
+  // const toggle = () => {
+  //   setIsOpen(!isOpen)
+  // }
   return (
     <li className="item" tdlist={tdlist} key={tdlist.id}>
       <input
@@ -13,7 +21,9 @@ const Task = ({ tdlist, onChange, onClick }) => {
         onClick={(e) => onClick(e, tdlist.id)}
       >
                     x
-                  </span>
+      </span>
+      {/*<Button className="editButton" color="danger" onClick={() =>toggle()}>Edit</Button>*/}
+      <UpdateModal onSubmit={onSubmit} tdlist={tdlist}/>
     </li>
   )
 }
