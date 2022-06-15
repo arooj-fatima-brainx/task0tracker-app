@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import axios from "axios";
 import update from "immutability-helper";
-import Task from './Task'
+import Tasks from  './Tasks'
 import AddTask from './AddTask'
 
 class TodoListsContainer extends Component {
@@ -121,16 +121,7 @@ class TodoListsContainer extends Component {
     return (
       <>
         <AddTask onSubmit={this.onSubmit}/>
-        <div className="wrapItems">
-          <ul className="listItems">
-            {this.state.tdlists.map((tdlist, index) => {
-              return (
-                <Task key={index} tdlist={tdlist} onChange={this.modifyTdlist} onClick={this.removeTdlist}
-                      onSubmit={this.editTdList}/>
-              );
-            })}
-          </ul>
-        </div>
+        <Tasks tdlists={this.state.tdlists} onChange={this.modifyTdlist} onDelete={this.removeTdlist} onSubmit={this.editTdList}/>
       </>
     );
   }
