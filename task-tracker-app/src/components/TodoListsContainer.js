@@ -2,27 +2,25 @@ import React, {Component} from "react";
 import axios from "axios";
 import update from "immutability-helper";
 import Task from './Task'
+import AddTask from './AddTask'
 
 class TodoListsContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
       tdlists: [],
-      title: '',
-      description: '',
-      done: false,
     };
   }
 
-  onSubmit = (e) => {
+  onSubmit = (e, title, description) => {
     e.preventDefault()
 
-    if (!this.state.title) {
+    if (!title) {
       alert('Please add a task')
       return
     }
 
-    this.newTdlist()
+    this.newTdlist(title, description)
   }
 
   editTdList = (e, id, title, description) => {
@@ -45,13 +43,12 @@ class TodoListsContainer extends Component {
       .catch((error) => console.log(error));
   }
 
-  newTdlist() {
+  newTdlist(title, description) {
     axios
       .post("/api/v1/todo_lists", {
         tdlist: {
-          title: this.state.title,
-          description: this.state.description,
-          done: this.state.done
+          title: title,
+          description: description,
         }
       })
       .then((res) => {
@@ -61,9 +58,6 @@ class TodoListsContainer extends Component {
 
         this.setState({
           tdlists: tdlists,
-          title: '',
-          description: '',
-          done: false,
         });
       })
       .catch((error) => console.log(error));
@@ -126,31 +120,7 @@ class TodoListsContainer extends Component {
   render() {
     return (
       <>
-        <div className="taskContainer">
-          <form onSubmit={this.onSubmit}>
-            <div>
-              <label>Task</label>
-              <input
-                type='text'
-                className="newTask"
-                placeholder='Add Task'
-                value={this.state.title}
-                onChange={(e) => this.setState({title: e.target.value})}
-              />
-            </div>
-            <div>
-              <label>Description</label>
-              <input
-                type='text'
-                className="newTask"
-                placeholder='Add Description'
-                value={this.state.description}
-                onChange={(e) => this.setState({description: e.target.value})}
-              />
-            </div>
-            <input type='submit' value='Save Task' className='btn btn-block'/>
-          </form>
-        </div>
+        <AddTask onSubmit={this.onSubmit}/>
         <div className="wrapItems">
           <ul className="listItems">
             {this.state.tdlists.map((tdlist, index) => {
