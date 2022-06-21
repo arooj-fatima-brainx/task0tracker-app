@@ -1,8 +1,9 @@
 import UpdateModal from "./UpdateModal";
 import React from "react";
 import {useDispatch} from "react-redux";
+import { modifyTdlist, removeTdlist } from "../../actions/todoActions";
 
-const Task = ({tdlist, onChange, onDelete, onSubmit}) => {
+const Task = ({tdlist}) => {
   const dispatch = useDispatch()
   return (
     <li className="item" tdlist={tdlist} key={tdlist.id}>
@@ -10,16 +11,16 @@ const Task = ({tdlist, onChange, onDelete, onSubmit}) => {
         className="itemCheckbox"
         type="checkbox"
         checked={tdlist.done}
-        onChange={(e) => onChange(e, tdlist.id, dispatch)}
+        onChange={(e) => modifyTdlist(e, tdlist.id, dispatch)}
       />
       <label className="itemDisplay">{tdlist.title}</label>
       <span
         className="removeItemButton"
-        onClick={(e) => onDelete(tdlist.id, dispatch)}
+        onClick={(e) => removeTdlist(tdlist.id, dispatch)}
       >
                     x
       </span>
-      <UpdateModal onSubmit={onSubmit} tdlist={tdlist}/>
+      <UpdateModal tdlist={tdlist}/>
     </li>
   )
 }

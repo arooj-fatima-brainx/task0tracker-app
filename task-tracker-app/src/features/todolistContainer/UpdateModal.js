@@ -1,8 +1,9 @@
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'react-bootstrap';
 import React, {useState} from 'react';
 import {useDispatch} from "react-redux";
+import { editTdList } from "../../actions/todoActions";
 
-const UpdateModal = ({tdlist, onSubmit}) => {
+const UpdateModal = ({tdlist}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState(tdlist.title)
   const [description, setDescription] = useState(tdlist.description)
@@ -19,7 +20,7 @@ const UpdateModal = ({tdlist, onSubmit}) => {
         <div className="taskContainer">
           <form onSubmit={(e) => {
             toggle()
-            onSubmit(e, tdlist.id, title, description, dispatch)
+            editTdList(e, tdlist.id, title, description, dispatch)
           }}>
             <ModalHeader toggle={toggle}>Modal title</ModalHeader>
             <ModalBody>

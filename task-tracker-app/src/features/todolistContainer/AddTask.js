@@ -1,7 +1,8 @@
 import React, {useState} from "react";
 import {useDispatch} from "react-redux";
+import { onSubmit } from "../../actions/todoActions";
 
-const AddTask = ({onSubmit}) => {
+const AddTask = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const dispatch = useDispatch()

@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { onSubmit, modifyTdlist, removeTdlist, editTdList, getTdlists} from './todolitsContainer'
+import { getTdlists } from "../../actions/todoActions";
 import Tasks from  './Tasks'
 import AddTask from './AddTask'
 import '../../App.css'
@@ -15,8 +15,8 @@ const TodolistContainerView = () => {
   }, [])
   return (
     <React.Fragment>
-      <AddTask onSubmit={onSubmit}/>
-      {tdlists.todolistContainer.tdlists.length > 0 && <Tasks tdlists={tdlists} onChange={modifyTdlist} onDelete={removeTdlist} onSubmit={editTdList}/>}
+      <AddTask />
+      {tdlists.todolistContainer.tdlists.length > 0 && <Tasks tdlists={tdlists}/>}
     </React.Fragment>
   )
 }
