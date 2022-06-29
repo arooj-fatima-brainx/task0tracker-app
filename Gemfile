@@ -8,6 +8,8 @@ gem 'rails', '~> 6.1.5'
 
 gem "react_on_rails", "12.0.0"
 gem "webpacker", "~> 5"
+gem 'devise'
+gem "devise_token_auth"
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3', '~> 1.4'
 # Use Puma as the app server
@@ -34,6 +36,13 @@ group :development, :test do
   # for development purposes
   gem 'sqlite3'
 end
+
+group :test do
+  gem 'rspec-rails'
+  gem 'factory_bot_rails'
+  #...
+end
+
 
 group :development do
   gem 'listen', '~> 3.3'

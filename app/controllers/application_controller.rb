@@ -1,3 +1,3 @@
 class ApplicationController < ActionController::Base
-  include ActionView::Layouts
+  include DeviseTokenAuth::Concerns::SetUserByToken
 end
