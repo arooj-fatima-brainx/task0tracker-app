@@ -18,6 +18,9 @@
     font-family: "Times New Roman", Times, serif, sans-serif;
     padding: 7px;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 ul.listItems {
@@ -131,6 +134,7 @@ input[placeholder] {
     text-decoration: none;
     font-size: 15px;
     font-family: inherit;
+    align-items: center;
 }
 
 .btn:focus {

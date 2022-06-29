@@ -1,5 +1,5 @@
 import axios from "axios";
-import { loginSuccessful } from "../features/authenticationContainer/authContainer"
+import { loginSuccessful, logoutSuccessful } from "../features/authenticationContainer/authContainer"
 
 export const onSubmit = (e, email, password, action, dispatch) => {
   e.preventDefault()
@@ -21,11 +21,13 @@ export const logIn = (email, password, dispatch) => {
   axios
     .post("/api/v1/users/sign_in", body, config)
     .then((res) => {
-      debugger
       dispatch(loginSuccessful(res.headers))
     })
     .catch((error) => {
-      debugger
       alert(error.response.data.errors[0])
     });
+}
+
+export const logOut = (dispatch) => {
+  dispatch(logoutSuccessful())
 }
