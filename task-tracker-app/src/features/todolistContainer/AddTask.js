@@ -1,16 +1,17 @@
 import React, {useState} from "react";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { onSubmit } from "../../actions/todoActions";
 
 const AddTask = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const dispatch = useDispatch()
+  const auth = useSelector((state) => state.authContainer)
 
   return (
     <div className="taskContainer">
       <form onSubmit={(e) => {
-        onSubmit(e, title, description, dispatch)
+        onSubmit(e, title, description, dispatch, auth)
         setTitle('')
         setDescription('')
       }}>

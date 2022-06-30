@@ -42,7 +42,7 @@ const tdlistContainer = createSlice({
       const tdlistIndex = state.tdlists.findIndex(
         (x) => x.id === action.payload.id
       );
-      const tdlists = update(this.state.tdlists, {
+      const tdlists = update(state.tdlists, {
         [tdlistIndex]: {$set: action.payload},
       });
       state.tdlists = tdlists

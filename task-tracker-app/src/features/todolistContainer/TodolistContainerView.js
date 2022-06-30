@@ -7,11 +7,12 @@ import '../../App.css'
 
 const TodolistContainerView = () => {
   const tdlists = useSelector((state) => state)
+  const auth = useSelector((state) => state.authContainer)
 
   const dispatch = useDispatch()
 
   useEffect(() => {
-    getTdlists(dispatch)
+    getTdlists(dispatch, auth)
   }, [])
   return (
     <React.Fragment>

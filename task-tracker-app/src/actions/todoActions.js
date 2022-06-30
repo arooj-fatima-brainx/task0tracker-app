@@ -6,61 +6,65 @@ import {
   loadTdlists, toggleCheck, updateTodoList
 } from "../features/todolistContainer/todolitsContainer";
 
-export const getTdlists = (dispatch) => {
+export const getTdlists = (dispatch, auth) => {
   dispatch(loadTdlists())
   axios
-    .get("/api/v1/todo_lists")
+    .get("/api/v1/todo_lists", getConfig(auth))
     .then((res) => {
       dispatch(getTasks(res.data))
     })
     .catch((error) => {
+      alert(error.response.data.errors[0])
       dispatch(loadingTdlistFailed())
     });
 }
 
-export const onSubmit = (e, title, description, dispatch) => {
+export const onSubmit = (e, title, description, dispatch, auth) => {
   e.preventDefault()
   if (!title) {
     alert('Please add a task')
     return
   }
 
-  newTdlist(title, description, dispatch)
+  newTdlist(title, description, dispatch, auth)
 }
 
-export const newTdlist = (title, description, dispatch) => {
+export const newTdlist = (title, description, dispatch, auth) => {
+
+  const body = JSON.stringify({
+    tdlist: {
+      title: title,
+      description: description,
+    }
+  });
   axios
-    .post("/api/v1/todo_lists", {
-      tdlist: {
-        title: title,
-        description: description,
-      }
-    })
+    .post("/api/v1/todo_lists", body, getConfig(auth))
     .then((res) => {
       dispatch(addNewTdList(res.data))
     })
     .catch((error) => console.log(error));
 };
 
-export const modifyTdlist = (e, id, dispatch) => {
+export const modifyTdlist = (e, id, dispatch, auth) => {
+  const body = JSON.stringify({tdlist: {done: e.target.checked}});
   axios
-    .put(`/api/v1/todo_lists/${id}`, {tdlist: {done: e.target.checked}})
+    .put(`/api/v1/todo_lists/${id}`, body, getConfig(auth))
     .then((res) => {
       dispatch(toggleCheck(res.data))
     })
     .catch((error) => console.log(error));
 };
 
-export const removeTdlist = (id, dispatch) => {
+export const removeTdlist = (id, dispatch, auth) => {
   axios
-    .delete(`/api/v1/todo_lists/${id}`)
+    .delete(`/api/v1/todo_lists/${id}`, getConfig(auth))
     .then((res) => {
       dispatch(deleteTdlist(id))
     })
     .catch((error) => console.log(error));
 };
 
-export const editTdList = (e, id, title, description, dispatch) => {
+export const editTdList = (e, id, title, description, dispatch, auth) => {
   e.preventDefault()
 
   if (!title) {
@@ -68,14 +72,26 @@ export const editTdList = (e, id, title, description, dispatch) => {
     return
   }
 
-  updateTdlist(id, title, description, dispatch)
+  updateTdlist(id, title, description, dispatch, auth)
 }
 
-export const updateTdlist = (id, title, description, dispatch) => {
+export const updateTdlist = (id, title, description, dispatch, auth) => {
   axios
-    .put(`/api/v1/todo_lists/${id}`, {tdlist: {title: title, description: description}})
+    .put(`/api/v1/todo_lists/${id}`, {tdlist: {title: title, description: description}}, getConfig(auth))
     .then((res) => {
       dispatch(updateTodoList(res.data))
     })
     .catch((error) => console.log(error));
 };
+
+const getConfig = (auth) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      'access-token': auth.accessToken,
+      'uid': auth.uid,
+      'client': auth.client
+    }
+  };
+  return config;
+}
